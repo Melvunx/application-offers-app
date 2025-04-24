@@ -15,16 +15,18 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   password      String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   emailVerified Boolean
   image         String?
   sessions      Session[]
   accounts      Account[]
+  offers        Offer[]
+  notifications Notification[]
 
   @@map("user")
 }
@@ -72,4 +74,53 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Offer {
+  id            String         @id @default(cuid())
+  title         String?
+  type          TypeOffer      @default(JOBBOARD)
+  company       String
+  url           String
+  applyDate     DateTime
+  location      String
+  status        Status         @default(PENDING)
+  isArchived    Boolean        @default(false)
+  isFavorite    Boolean        @default(false)
+  description   String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  notifications Notification[]
+  User          User           @relation(fields: [userId], references: [id])
+  userId        String
+
+  @@index([userId])
+  @@map("offers")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  offerId   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  offer     Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, offerId])
+  @@map("notifications")
+}
+
+enum TypeOffer {
+  SPONTANEOUS
+  JOBBOARD
+}
+
+enum Status {
+  PENDING
+  INTERVIEW
+  REJECTED
+  ACCEPTED
 }
