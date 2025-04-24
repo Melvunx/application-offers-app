@@ -1,6 +1,5 @@
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
-import { redirect, unauthorized } from "next/navigation";
 
 export const authUser = async () => {
   const session = await auth.api.getSession({
@@ -15,19 +14,19 @@ export const authSession = async () => {
     headers: await headers(),
   });
 
-  if (!sess) redirect("/auth/login");
+  if (!sess || sess.session.expiresAt < new Date())
+    return { authorization: false, redirect: "/auth/login" };
 
-  const { session } = sess;
-
-  if (session.expiresAt < new Date()) return null;
-
-  return session.id;
+  return {
+    authorization: true,
+    redirect: "/dashboard",
+  };
 };
 
 export const getRequiredUser = async () => {
   const user = await authUser();
 
-  if (!user) unauthorized();
+  if (!user) return { redirect: "/auth/login" };
 
   return user;
 };
