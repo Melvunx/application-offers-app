@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Offer, TypeOffer } from "../generated/prisma";
 import { formatDate } from "../lib/utils";
+import { PaginationsControls } from "./PaginationsControls";
 import {
   Card,
   CardContent,
@@ -123,6 +124,10 @@ export function OfferList() {
           <OfferCard key={offer.id} offer={offer} />
         ))
       )}
+      <PaginationsControls
+        totalItems={filteredOffers.length}
+        itemsPerPage={6}
+      />
     </div>
   );
 }
