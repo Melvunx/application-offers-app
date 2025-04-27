@@ -99,9 +99,9 @@ export const PaginationsControls: React.FC<PaginationControlsProps> = ({
             <Button
               key={pageNumber}
               onClick={() => handlePageChange(pageNumber)}
-              className={`${
+              className={
                 currentPage === pageNumber ? "bg-primary text-white" : ""
-              }`}
+              }
               disabled={currentPage === pageNumber}
               variant={currentPage === pageNumber ? "default" : "outline"}
             >

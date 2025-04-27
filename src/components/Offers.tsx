@@ -23,7 +23,14 @@ const OfferCard = ({ offer }: { offer: Offer }) => {
   return (
     <Card>
       <CardHeader className="flex flex-col items-start space-y-2">
-        <CardTitle>{offer.title ?? "Offre spéciale"}</CardTitle>
+        <div>
+          {offer.isFavorite && (
+            <StarIcon className="text-amber-400" size={16} />
+          )}
+        </div>
+        <CardTitle className={offer.isFavorite ? "text-amber-400" : ""}>
+          {offer.title ?? "Offre spéciale"} - {formatDate(offer.createdAt)}
+        </CardTitle>
         <CardDescription>{offer.type}</CardDescription>
       </CardHeader>
       <CardContent></CardContent>
@@ -85,35 +92,39 @@ export function OfferList() {
   return (
     <div>
       <div>
-        <ToggleGroup
-          type="single"
-          value={filters.type}
-          onValueChange={(value) => handleTypeChange(value || "ALL")}
-        >
-          <ToggleGroupItem value="ALL">Tous</ToggleGroupItem>
-          <ToggleGroupItem value="JOBBOARD">Job Board</ToggleGroupItem>
-          <ToggleGroupItem value="SPONTANEOUS">Spontanée</ToggleGroupItem>
-        </ToggleGroup>
+        {filteredOffers.length > 0 && (
+          <>
+            <ToggleGroup
+              type="single"
+              value={filters.type}
+              onValueChange={(value) => handleTypeChange(value || "ALL")}
+            >
+              <ToggleGroupItem value="ALL">Tous</ToggleGroupItem>
+              <ToggleGroupItem value="JOBBOARD">Job Board</ToggleGroupItem>
+              <ToggleGroupItem value="SPONTANEOUS">Spontanée</ToggleGroupItem>
+            </ToggleGroup>
 
-        <ToggleGroup
-          type="multiple"
-          value={[
-            filters.showFavorites ? "favorites" : "",
-            filters.showArchived ? "archived" : "",
-          ]}
-          onValueChange={(value) => handleFavoriteAndArchivedChange(value)}
-        >
-          <ToggleGroupItem value="favorites">
-            <StarIcon
-              className={filters.showFavorites ? "fill-amber-400" : ""}
-            />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="archived">
-            <ArchiveIcon
-              className={filters.showArchived ? "text-green-500" : ""}
-            />
-          </ToggleGroupItem>
-        </ToggleGroup>
+            <ToggleGroup
+              type="multiple"
+              value={[
+                filters.showFavorites ? "favorites" : "",
+                filters.showArchived ? "archived" : "",
+              ]}
+              onValueChange={(value) => handleFavoriteAndArchivedChange(value)}
+            >
+              <ToggleGroupItem value="favorites">
+                <StarIcon
+                  className={filters.showFavorites ? "fill-amber-400" : ""}
+                />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="archived">
+                <ArchiveIcon
+                  className={filters.showArchived ? "text-green-500" : ""}
+                />
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </>
+        )}
       </div>
       {filteredOffers.length === 0 ? (
         <div className="text-center p-8 bg-gray-50 rounded-lg">
