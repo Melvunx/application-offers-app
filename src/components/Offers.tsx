@@ -28,8 +28,7 @@ const OfferCard = ({ offer }: { offer: Offer }) => {
             <StarIcon className="text-amber-400" size={16} />
           )}
         </div>
-        <CardTitle className={offer.isFavorite ? "text-amber-400" : ""}>
-          {offer.title ?? "Offre spéciale"} - {formatDate(offer.createdAt)}
+        <CardTitle className={offer.isFavorite ? "text-amber-400" : ""}> 
         </CardTitle>
         <CardDescription>{offer.type}</CardDescription>
       </CardHeader>

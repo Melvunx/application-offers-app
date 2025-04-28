@@ -71,7 +71,7 @@ export const updateIsArchivedOfferAction = async (
 
     const updatedArchive = await prisma.offer.update({
       where: { id: parsedId },
-      data: { isArchived },
+      data: { isArchived, isFavorite: false },
       select: {
         id: true,
         isArchived: true,
